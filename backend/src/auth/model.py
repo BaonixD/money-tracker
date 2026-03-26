@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import Mapped, relationship
 from sqlalchemy.orm import mapped_column
 
 from backend.database import Base
@@ -16,3 +16,5 @@ class User(Base):
     created_at: Mapped[datetime] = mapped_column(
         nullable=False, default=lambda: datetime.now(timezone.utc)
     )
+
+    transactions: Mapped[list["Transaction"]] = relationship(back_populates="user")
