@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.database import get_db
 from backend.src.auth.dependencies import get_current_user, get_current_admin
 from backend.src.auth.model import User
-from backend.src.category.schemas import CategoryCreate, CategoryResponse
-from backend.src.category.service import create_category, get_categories, get_category_by_id
+from backend.src.category.schemas import CategoryCreate, CategoryResponse, CategoryUpdate
+from backend.src.category.service import create_category, get_categories, get_category_by_id, update_category, delete_category
 
 router = APIRouter(prefix="/categories", tags=["categories"])
 
@@ -41,3 +41,26 @@ async def get_category_endpoint(
             detail="Category not found",
         )
     return category
+
+@router.patch("/{category_id}", response_model=CategoryResponse)
+async def update_category_endpoint(
+    category_id: int,
+    data: CategoryUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_admin)
+):
+    category = await update_category(db, category_id, data)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return category
+
+@router.delete("/{category_id}", status_code=204)
+async def delete_category_endpoint(
+    category_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_admin),
+):
+    deleted = await delete_category(db, category_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Category not found")
+
