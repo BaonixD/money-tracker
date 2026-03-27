@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.database import get_db
-from backend.src.auth.dependencies import get_current_user
+from backend.src.auth.dependencies import get_current_user, get_current_admin
 from backend.src.auth.model import User
 from backend.src.category.schemas import CategoryCreate, CategoryResponse
 from backend.src.category.service import create_category, get_categories, get_category_by_id
@@ -14,7 +14,7 @@ router = APIRouter(prefix="/categories", tags=["categories"])
 async def create_category_endpoint(
     data: CategoryCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(get_current_user),
+    current_user: User = Depends(get_current_admin),
 ):
     category = await create_category(db, data)
     return category
