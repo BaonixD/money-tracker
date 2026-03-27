@@ -1,0 +1,43 @@
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from backend.database import get_db
+from backend.src.auth.dependencies import get_current_user
+from backend.src.auth.model import User
+from backend.src.category.schemas import CategoryCreate, CategoryResponse
+from backend.src.category.service import create_category, get_categories, get_category_by_id
+
+router = APIRouter(prefix="/categories", tags=["categories"])
+
+
+@router.post("/create", response_model=CategoryResponse)
+async def create_category_endpoint(
+    data: CategoryCreate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    category = await create_category(db, data)
+    return category
+
+
+@router.get("/", response_model=list[CategoryResponse])
+async def get_categories_endpoint(
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    return await get_categories(db)
+
+
+@router.get("/{category_id}", response_model=CategoryResponse)
+async def get_category_endpoint(
+    category_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    category = await get_category_by_id(db, category_id)
+    if not category:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Category not found",
+        )
+    return category
