@@ -4,8 +4,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.database import get_db
 from backend.src.auth.dependencies import get_current_user
 from backend.src.auth.model import User
-from backend.src.transactions.schemas import TransactionCreate, TransactionResponse
-from backend.src.transactions.service import create_transaction, get_transactions, get_transaction_by_id
+from backend.src.transactions.schemas import TransactionCreate, TransactionResponse, TransactionUpdate
+from backend.src.transactions.service import create_transaction, get_transactions, get_transaction_by_id, update_transaction, delete_transaction
 
 router = APIRouter(prefix="/transactions", tags=["transactions"])
 
@@ -47,3 +47,39 @@ async def get_transaction_endpoint(
             detail="Transaction not found",
         )
     return transaction
+
+
+@router.patch("/{transaction_id}", response_model=TransactionResponse)
+async def update_transaction_endpoint(
+    transaction_id: int,
+    data: TransactionUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        transaction = await update_transaction(db, transaction_id, current_user.id, data)
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(e),
+        )
+    if not transaction:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found",
+        )
+    return transaction
+
+
+@router.delete("/{transaction_id}", status_code=204)
+async def delete_transaction_endpoint(
+    transaction_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    deleted = await delete_transaction(db, transaction_id, current_user.id)
+    if not deleted:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found",
+        )
