@@ -15,14 +15,6 @@ CREDENTIALS_EXCEPTION = HTTPException(
     headers={"WWW-Authenticate": "Bearer"},
 )
 
-async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)) ->User:
-    email = decode_token(token)
-    user = await get_user_by_email(db, email)
-    if user is None:
-        raise CREDENTIALS_EXCEPTION
-    return user
-
-
 def decode_token(token: str) -> str:
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
@@ -32,3 +24,11 @@ def decode_token(token: str) -> str:
         return email
     except JWTError:
         raise CREDENTIALS_EXCEPTION
+
+
+async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)) -> User:
+    email = decode_token(token)
+    user = await get_user_by_email(db, email)
+    if user is None:
+        raise CREDENTIALS_EXCEPTION
+    return user
