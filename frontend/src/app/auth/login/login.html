@@ -1,0 +1,24 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Sign In</h1>
+    <p class="auth-subtitle">Welcome back to Money Tracker</p>
+
+    @if (error) {
+      <div class="error-msg">{{ error }}</div>
+    }
+
+    <form (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="your@email.com" required />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" [(ngModel)]="password" name="password" placeholder="••••••••" required />
+      </div>
+      <button type="submit" class="btn-primary">Sign In</button>
+    </form>
+
+    <p class="auth-link">Don't have an account? <a routerLink="/register">Register</a></p>
+  </div>
+</div>

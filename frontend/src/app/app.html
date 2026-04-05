@@ -1,0 +1,8 @@
+<div class="app-container" [class.with-sidebar]="showSidebar()">
+  @if (showSidebar()) {
+    <app-sidebar />
+  }
+  <main class="main-content">
+    <router-outlet />
+  </main>
+</div>

@@ -1,0 +1,47 @@
+<header class="header">
+  <h1>Dashboard</h1>
+</header>
+
+<section class="stats-grid">
+  <div class="stat-card">
+    <p class="stat-label">Income</p>
+    <h2 class="stat-value text-income">${{ stats.total_income.toFixed(2) }}</h2>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Expense</p>
+    <h2 class="stat-value text-expense">${{ stats.total_expense.toFixed(2) }}</h2>
+  </div>
+  <div class="stat-card">
+    <p class="stat-label">Balance</p>
+    <h2 class="stat-value" [class.text-income]="stats.balance >= 0" [class.text-expense]="stats.balance < 0">${{ stats.balance.toFixed(2) }}</h2>
+  </div>
+</section>
+
+<div class="dashboard-bottom">
+  <section class="chart-section">
+    <div class="chart-placeholder">Chart coming soon</div>
+  </section>
+
+  <section class="transactions-section">
+    <p class="section-title">Recent Transactions</p>
+    <div class="table-header">
+      <div class="col-date">Date</div>
+      <div class="col-desc">Description</div>
+      <div class="col-amount">Amount</div>
+    </div>
+    <div class="transactions-list">
+      @for (tx of recentTransactions; track tx.id) {
+        <div class="tx-row">
+          <div class="col-date">{{ formatDate(tx.created_at) }}</div>
+          <div class="col-desc">{{ tx.description || '—' }}</div>
+          <div class="col-amount" [class.text-income]="tx.type === 'income'" [class.text-expense]="tx.type === 'expense'">
+            {{ formatAmount(tx) }}
+          </div>
+        </div>
+      }
+      @empty {
+        <div class="tx-row empty">No transactions yet</div>
+      }
+    </div>
+  </section>
+</div>
