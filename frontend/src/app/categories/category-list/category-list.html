@@ -1,0 +1,25 @@
+<header class="header">
+  <h1>Categories</h1>
+</header>
+
+<div class="add-form">
+  <input type="text" [(ngModel)]="newCategoryName" placeholder="New category name" (keyup.enter)="addCategory()" />
+  <button class="btn-add" (click)="addCategory()">Add</button>
+</div>
+
+<div class="categories-grid">
+  @for (cat of categories; track cat.id) {
+    <div class="category-card">
+      <span class="category-name">{{ cat.name }}</span>
+      <button class="btn-delete" (click)="deleteCategory(cat.id)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  }
+  @empty {
+    <p class="empty-msg">No categories yet</p>
+  }
+</div>

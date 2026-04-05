@@ -1,0 +1,79 @@
+<header class="header">
+  <h1>Transactions</h1>
+</header>
+
+<div class="toolbar">
+  <div class="filters">
+    <select [(ngModel)]="filterType" (ngModelChange)="applyFilter()">
+      <option value="">All types</option>
+      <option value="income">Income</option>
+      <option value="expense">Expense</option>
+    </select>
+    <select [(ngModel)]="filterCategoryId" (ngModelChange)="applyFilter()">
+      <option [ngValue]="null">All categories</option>
+      @for (cat of categories; track cat.id) {
+        <option [ngValue]="cat.id">{{ cat.name }}</option>
+      }
+    </select>
+  </div>
+  <button class="btn-add" (click)="showForm = !showForm">
+    {{ showForm ? 'Cancel' : '+ Add' }}
+  </button>
+</div>
+
+@if (showForm) {
+  <div class="add-form">
+    <input type="number" [(ngModel)]="newTx.amount" placeholder="Amount" />
+    <input type="text" [(ngModel)]="newTx.description" placeholder="Description" />
+    <select [(ngModel)]="newTx.type">
+      <option value="expense">Expense</option>
+      <option value="income">Income</option>
+    </select>
+    <select [(ngModel)]="newTx.category_id">
+      <option [ngValue]="0" disabled>Category</option>
+      @for (cat of categories; track cat.id) {
+        <option [ngValue]="cat.id">{{ cat.name }}</option>
+      }
+    </select>
+    <button class="btn-submit" (click)="addTransaction()">Save</button>
+  </div>
+}
+
+<section class="transactions-section">
+  <div class="table-header">
+    <div class="col-date">Date</div>
+    <div class="col-desc">Description</div>
+    <div class="col-cat">Category</div>
+    <div class="col-amount">Amount</div>
+    <div class="col-actions"></div>
+  </div>
+  <div class="transactions-list">
+    @for (tx of transactions; track tx.id) {
+      <div class="tx-row">
+        <div class="col-date">{{ formatDate(tx.created_at) }}</div>
+        <div class="col-desc">{{ tx.description || '—' }}</div>
+        <div class="col-cat">{{ getCategoryName(tx.category_id) }}</div>
+        <div class="col-amount" [class.text-income]="tx.type === 'income'" [class.text-expense]="tx.type === 'expense'">
+          {{ formatAmount(tx) }}
+        </div>
+        <div class="col-actions">
+          <button class="btn-delete" (click)="deleteTransaction(tx.id)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    }
+    @empty {
+      <div class="tx-row empty">No transactions yet</div>
+    }
+  </div>
+</section>
+
+<div class="pagination">
+  <button (click)="prevPage()" [disabled]="offset === 0">← Prev</button>
+  <span class="page-info">{{ offset + 1 }}–{{ offset + transactions.length }} of {{ total }}</span>
+  <button (click)="nextPage()" [disabled]="offset + limit >= total">Next →</button>
+</div>
