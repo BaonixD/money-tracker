@@ -43,4 +43,15 @@ class TransactionResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class StatisticsResponse(BaseModel):
+    total_income: float
+    total_expense: float
+    balance: float
+
+
+class PaginatedResponse(BaseModel):
+    items: list[TransactionResponse]
+    total: int
+    limit: int
+    offset: int
 
