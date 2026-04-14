@@ -1,23 +1,58 @@
+:host {
+  display: block;
+  margin: -40px -48px;
+}
+
 .auth-container {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--color-income-glow) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
 }
 
 .auth-card {
   background-color: var(--bg-card);
-  padding: 40px;
-  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  padding: 48px;
+  border-radius: 16px;
   width: 100%;
-  max-width: 400px;
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
+}
 
-  h1 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 8px;
+.auth-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 32px;
+  font-size: 18px;
+  font-weight: 600;
+
+  svg {
+    color: var(--color-income);
   }
+}
+
+.auth-card h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
 .auth-subtitle {
@@ -27,10 +62,10 @@
 }
 
 .error-msg {
-  background-color: rgba(244, 63, 94, 0.1);
+  background-color: var(--color-expense-glow);
   color: var(--color-expense);
-  padding: 12px;
-  border-radius: 4px;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
   font-size: 13px;
   margin-bottom: 16px;
 }
@@ -40,25 +75,27 @@
 
   label {
     display: block;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     font-size: 13px;
-    margin-bottom: 8px;
+    font-weight: 500;
+    margin-bottom: 6px;
   }
 
   input {
     width: 100%;
-    padding: 10px 12px;
-    background-color: var(--bg-app);
+    padding: 12px 16px;
+    background-color: var(--bg-input);
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     color: var(--text-main);
     font-family: inherit;
     font-size: 14px;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
 
     &:focus {
       border-color: var(--color-income);
+      box-shadow: 0 0 0 3px var(--color-income-glow);
     }
 
     &::placeholder {
@@ -69,19 +106,24 @@
 
 .btn-primary {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   background-color: var(--color-income);
   color: #000;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   font-family: inherit;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: background 0.2s, transform 0.1s;
+  margin-top: 4px;
 
   &:hover {
-    opacity: 0.9;
+    background-color: var(--color-income-hover);
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 }
 
@@ -94,6 +136,7 @@
   a {
     color: var(--color-income);
     text-decoration: none;
+    font-weight: 500;
 
     &:hover {
       text-decoration: underline;

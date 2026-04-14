@@ -1,47 +1,92 @@
-<header class="header">
+<div class="page-header">
   <h1>Dashboard</h1>
-</header>
+  <p class="page-subtitle">Your financial overview</p>
+</div>
 
 <section class="stats-grid">
   <div class="stat-card">
-    <p class="stat-label">Income</p>
-    <h2 class="stat-value text-income">${{ stats.total_income.toFixed(2) }}</h2>
+    <p class="stat-label"><span class="stat-dot income"></span> Income</p>
+    <h2 class="stat-value text-income">{{ formatMoney(stats.total_income) }}</h2>
   </div>
   <div class="stat-card">
-    <p class="stat-label">Expense</p>
-    <h2 class="stat-value text-expense">${{ stats.total_expense.toFixed(2) }}</h2>
+    <p class="stat-label"><span class="stat-dot expense"></span> Expenses</p>
+    <h2 class="stat-value text-expense">{{ formatMoney(stats.total_expense) }}</h2>
   </div>
   <div class="stat-card">
-    <p class="stat-label">Balance</p>
-    <h2 class="stat-value" [class.text-income]="stats.balance >= 0" [class.text-expense]="stats.balance < 0">${{ stats.balance.toFixed(2) }}</h2>
+    <p class="stat-label"><span class="stat-dot balance"></span> Balance</p>
+    <h2 class="stat-value" [class.text-income]="stats.balance >= 0" [class.text-expense]="stats.balance < 0">{{ formatMoney(stats.balance) }}</h2>
+  </div>
+</section>
+
+<section class="quick-stats">
+  <div class="quick-card">
+    <div class="quick-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+    </div>
+    <div class="quick-info">
+      <span class="quick-value">{{ totalTransactions }}</span>
+      <span class="quick-label">Total Transactions</span>
+    </div>
+  </div>
+  <div class="quick-card">
+    <div class="quick-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+    </div>
+    <div class="quick-info">
+      <span class="quick-value">{{ formatMoney(avgExpense) }}</span>
+      <span class="quick-label">Avg Expense</span>
+    </div>
+  </div>
+  <div class="quick-card">
+    <div class="quick-icon expense-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    </div>
+    <div class="quick-info">
+      <span class="quick-value">{{ biggestExpense ? formatMoney(biggestExpense.amount) : '—' }}</span>
+      <span class="quick-label">Biggest Expense</span>
+    </div>
   </div>
 </section>
 
 <div class="dashboard-bottom">
-  <section class="chart-section">
-    <div class="chart-placeholder">Chart coming soon</div>
+  <section class="card">
+    <div class="card-title">
+      Spending by Category
+    </div>
+    @if (categorySpending.length > 0) {
+      <div class="category-bars">
+        @for (cat of categorySpending; track cat.name) {
+          <div class="cat-row">
+            <div class="cat-header">
+              <span class="cat-name">{{ cat.name }}</span>
+              <span class="cat-amount">{{ formatMoney(cat.amount) }}</span>
+            </div>
+            <div class="cat-bar-bg">
+              <div class="cat-bar-fill" [style.width.%]="cat.percent"></div>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-msg">No expense data yet</div>
+    }
   </section>
 
-  <section class="transactions-section">
-    <p class="section-title">Recent Transactions</p>
-    <div class="table-header">
-      <div class="col-date">Date</div>
-      <div class="col-desc">Description</div>
-      <div class="col-amount">Amount</div>
-    </div>
-    <div class="transactions-list">
-      @for (tx of recentTransactions; track tx.id) {
-        <div class="tx-row">
-          <div class="col-date">{{ formatDate(tx.created_at) }}</div>
-          <div class="col-desc">{{ tx.description || '—' }}</div>
-          <div class="col-amount" [class.text-income]="tx.type === 'income'" [class.text-expense]="tx.type === 'expense'">
-            {{ formatAmount(tx) }}
-          </div>
+  <section class="card">
+    <div class="card-title">Recent Transactions <a routerLink="/transactions" class="see-all">See all</a></div>
+    @for (tx of recentTransactions; track tx.id) {
+      <div class="recent-item">
+        <div class="recent-left">
+          <span class="recent-desc">{{ tx.description || '—' }}</span>
+          <span class="recent-meta">{{ formatDate(tx.created_at) }}</span>
         </div>
-      }
-      @empty {
-        <div class="tx-row empty">No transactions yet</div>
-      }
-    </div>
+        <span class="recent-amount" [class.text-income]="tx.type === 'income'" [class.text-expense]="tx.type === 'expense'">
+          {{ formatAmount(tx) }}
+        </span>
+      </div>
+    }
+    @empty {
+      <div class="empty-msg">No transactions yet</div>
+    }
   </section>
 </div>

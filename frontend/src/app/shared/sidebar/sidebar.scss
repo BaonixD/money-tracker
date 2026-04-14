@@ -1,6 +1,6 @@
 .sidebar {
   width: var(--sidebar-width);
-  background-color: var(--bg-app);
+  background-color: var(--bg-card);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
@@ -28,30 +28,35 @@
   align-items: center;
   gap: 12px;
   font-weight: 600;
-  font-size: 16px;
-  border-bottom: 1px solid var(--border-color);
+  font-size: 15px;
+  border-bottom: 1px solid var(--border-subtle);
   white-space: nowrap;
   overflow: hidden;
+
+  svg {
+    color: var(--color-income);
+  }
 }
 
 .nav-menu {
   flex-grow: 1;
-  padding: 20px 12px;
+  padding: 16px 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   text-decoration: none;
-  color: var(--text-muted);
-  border-radius: 6px;
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
   font-size: 14px;
-  transition: all 0.2s;
+  font-weight: 450;
+  transition: all 0.15s;
   cursor: pointer;
   background: none;
   border: none;
@@ -59,31 +64,24 @@
   white-space: nowrap;
 
   &:hover {
-    background-color: var(--bg-hover);
+    background-color: var(--bg-card-hover);
     color: var(--text-main);
   }
 
   &.active {
-    background-color: var(--bg-card);
-    color: var(--text-main);
-    position: relative;
+    background-color: var(--color-income-glow);
+    color: var(--color-income);
+    font-weight: 500;
 
-    &::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 6px;
-      bottom: 6px;
-      width: 3px;
-      background-color: var(--color-income);
-      border-radius: 0 2px 2px 0;
+    svg {
+      color: var(--color-income);
     }
   }
 }
 
 .sidebar-bottom {
   padding: 12px;
-  border-top: 1px solid var(--border-color);
+  border-top: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -91,10 +89,12 @@
 
 .logout-btn {
   width: 100%;
-  color: var(--color-expense);
+  color: var(--text-muted);
+  font-size: 13px;
 
   &:hover {
-    background-color: rgba(244, 63, 94, 0.1);
+    color: var(--color-expense);
+    background-color: var(--color-expense-glow);
   }
 }
 
