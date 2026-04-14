@@ -82,11 +82,11 @@ export class TransactionList implements OnInit {
   }
 
   formatAmount(tx: Transaction): string {
-    return tx.type === 'income' ? `+$${tx.amount.toFixed(2)}` : `-$${tx.amount.toFixed(2)}`;
+    return tx.type === 'income' ? `+${tx.amount.toLocaleString()} ₸` : `-${tx.amount.toLocaleString()} ₸`;
   }
 
   formatDate(dateStr: string): string {
-    return new Date(dateStr).toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+    return new Date(dateStr).toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
   }
 
   getCategoryName(id: number): string {

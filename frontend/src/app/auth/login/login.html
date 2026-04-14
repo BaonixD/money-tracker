@@ -1,7 +1,15 @@
 <div class="auth-container">
   <div class="auth-card">
-    <h1>Sign In</h1>
-    <p class="auth-subtitle">Welcome back to Money Tracker</p>
+    <div class="auth-logo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+        <path d="M2 10h20"></path>
+        <circle cx="16" cy="14" r="2"></circle>
+      </svg>
+      Money Tracker
+    </div>
+    <h1>Welcome back</h1>
+    <p class="auth-subtitle">Sign in to your account</p>
 
     @if (error) {
       <div class="error-msg">{{ error }}</div>
@@ -10,7 +18,7 @@
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="email">Email</label>
-        <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="your@email.com" required />
+        <input type="email" id="email" [(ngModel)]="email" name="email" placeholder="you@example.com" required />
       </div>
       <div class="form-group">
         <label for="password">Password</label>
@@ -19,6 +27,6 @@
       <button type="submit" class="btn-primary">Sign In</button>
     </form>
 
-    <p class="auth-link">Don't have an account? <a routerLink="/register">Register</a></p>
+    <p class="auth-link">Don't have an account? <a routerLink="/register">Create one</a></p>
   </div>
 </div>
